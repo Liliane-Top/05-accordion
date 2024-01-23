@@ -25,6 +25,9 @@ export default function App() {
 }
 
 function Accordion({ data }) {
+  const [currOpen, setCurrOpen] = useState(null);
+  console.log(currOpen);
+
   return (
     <div className="accordion">
       {/* the array already contains index starting with 0*/}
@@ -32,28 +35,43 @@ function Accordion({ data }) {
         <AccordionItem
           key={i}
           title={el.title}
-          text={el.text}
-          num={i < 10 ? "0" + (i + 1) : i + 1}
-        />
+          num={i}
+          currOpen={currOpen}
+          onOpen={setCurrOpen}
+        >
+          {el.text}
+        </AccordionItem>
       ))}
+      <AccordionItem
+        key={"test1"}
+        title={"Test 1"}
+        num={22}
+        currOpen={currOpen}
+        onOpen={setCurrOpen}
+      >
+        <p>So much you can learn by just fooling around with the code.</p>
+        <p>Especially if things go wrong!</p>
+      </AccordionItem>
     </div>
   );
 }
 
-function AccordionItem({ num, title, text }) {
-  const [isOpen, setisOpen] = useState(false);
+function AccordionItem({ num, title, currOpen, onOpen, children }) {
+  const isOpen = num === currOpen;
 
   function handleToggle() {
-    setisOpen(!isOpen);
+    onOpen(isOpen ? null : num);
   }
 
   return (
     <div className={`item ${isOpen && "open"}`} onClick={handleToggle}>
-      <p className="number">{num}</p>
+      <p className="number">
+        {num < 10 ? "0" : ""}
+        {num + 1}
+      </p>
       <p className="title">{title}</p>
       <p className="icon">{isOpen ? "-" : "+"}</p>
-      {/* <div className="content-box">{isOpen ? text : ""}</div> */}
-      {isOpen && <div className="content-box">{isOpen ? text : ""}</div>}
+      {isOpen && <div className="content-box">{children}</div>}
     </div>
   );
 }
